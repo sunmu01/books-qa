@@ -36,6 +36,8 @@ const payload = ref({
   question: null,
   bookname: null,
   qa_level: 0,
+  previous_question: null,
+  previous_answer: null
 });
 
 const askHandler = async () => {
@@ -52,6 +54,8 @@ const askHandler = async () => {
       }
     );
     answer.value = data;
+    payload.value.previous_question = payload.value.question;
+    payload.value.previous_answer = data;
   } catch (error) {
     error.value = error;
   }
@@ -79,8 +83,8 @@ const askHandler = async () => {
             v-model="payload.bookname"
           >
             <option value="null" selected>All books</option>
-            <option value="book.name" v-for="book in books">
-              《{{ book.display_name }}》
+            <option :value="book.book_name" v-for="book in books">
+              《{{ book.book_name }}》
             </option>
           </select>
         </div>
