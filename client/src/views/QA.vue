@@ -71,12 +71,11 @@ const askHandler = async () => {
 <template>
   <div>
     <div class="prose max-w-none">
-      <div class="text-2xl border-l-4 pl-4 border-blue-600">Book Q&A</div>
+      <div class="text-2xl border-l-4 pl-4 border-blue-600">Books Q&A with ChatGPT</div>
 
       <p>
-        To search for answers from the content in your files, upload them here
-        and we will use OpenAI embeddings and GPT to find answers from the
-        relevant documents.
+        We use OpenAI embeddings and ChatGPT to find answers from the
+        relevant books.
       </p>
 
       <div>
@@ -113,14 +112,14 @@ const askHandler = async () => {
       </div>
 
       <div>
-        <i>Ask a question based on the content of your files:</i>
+        <i>Ask a question based on the content of these books:</i>
         <div class="py-2">
           <input
             class="form-input rounded w-full"
             type="search"
             name="question"
             v-model="payload.question"
-            placeholder="e.g. What were the key takeaways from the Q1 planning meeting?"
+            placeholder="e.g. What is the Central Bank? or 什么是中国历史的空间结构？"
           />
         </div>
       </div>
