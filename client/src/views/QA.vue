@@ -24,7 +24,7 @@ const books = ref([]);
 onBeforeMount(async () => {
   try {
     const { data } = await fetch(
-      `${import.meta.env.API_URL}/get_bookname_list`
+      `${import.meta.env.VITE_API_URL}/get_bookname_list`
     );
     books.value = data;
   } catch (error) {
@@ -41,7 +41,7 @@ const payload = ref({
 const askHandler = async () => {
   try {
     const { data } = await fetch(
-      `${import.meta.env.API_URL}/get_chatgpt_answer`,
+      `${import.meta.env.VITE_API_URL}/get_chatgpt_answer`,
       {
         method: "POST",
         headers: {
