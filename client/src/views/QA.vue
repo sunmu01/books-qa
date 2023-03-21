@@ -21,16 +21,22 @@ const levels = ref([
 
 const books = ref([]);
 
-onBeforeMount(async () => {
-  try {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/get_bookname_list`
-    );
-    console.log(res)
-    books.value = res.data;
-  } catch (error) {
-    books.value = "";
-  }
+const api = import.meta.env.VITE_API_URL;
+onBeforeMount(() => {
+  fetch(`${api}/get_bookname_list`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      books.value = data;
+    })
+    .catch((error) => {
+      books.value = [];
+    });
 });
 
 const payload = ref({
@@ -42,24 +48,23 @@ const payload = ref({
 });
 
 const askHandler = async () => {
-  try {
-    const { data } = await fetch(
-      `${import.meta.env.VITE_API_URL}/get_chatgpt_answer`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: JSON.stringify(payload.value),
-      }
-    );
-    answer.value = data;
-    payload.value.previous_question = payload.value.question;
-    payload.value.previous_answer = data;
-  } catch (error) {
-    error.value = error;
-  }
+  fetch(`${api}/get_chatgpt_answer`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload.value),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      answer.value = data;
+      payload.value.previous_question = payload.value.question;
+      payload.value.previous_answer = data;
+    })
+    .catch((error) => {
+      error.value = error;
+    });
 };
 </script>
 
