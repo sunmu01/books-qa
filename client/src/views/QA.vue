@@ -7,15 +7,15 @@ const answer = ref(null);
 const levels = ref([
   {
     name: "book",
-    value: 0,
+    value: "L0",
   },
   {
     name: "summary",
-    value: 1,
+    value: "L1",
   },
   {
     name: "outline",
-    value: 2,
+    value: "L2",
   },
 ]);
 
@@ -23,21 +23,22 @@ const books = ref([]);
 
 onBeforeMount(async () => {
   try {
-    const { data } = await fetch(
+    const res = await fetch(
       `${import.meta.env.VITE_API_URL}/get_bookname_list`
     );
-    books.value = data;
+    console.log(res)
+    books.value = res.data;
   } catch (error) {
-    books.value = null;
+    books.value = "";
   }
 });
 
 const payload = ref({
-  question: null,
-  bookname: null,
-  qa_level: 0,
-  previous_question: null,
-  previous_answer: null
+  question: "",
+  bookname: "",
+  qa_level: "L0",
+  previous_question: "",
+  previous_answer: "",
 });
 
 const askHandler = async () => {
