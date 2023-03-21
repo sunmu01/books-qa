@@ -78,10 +78,10 @@ def answer_question():
     try:
         params = request.get_json()
         question = params["question"]
-        summary_level = params["summary_level"]
-        book_name = params["book_name"]
-        previous_question = "" #params["previous_question"]
-        previous_answer = "" #params["previous_answer"]
+        summary_level = params["qa_level"]
+        book_name = params["bookname"]
+        previous_question = "" #params["pre_question"]
+        previous_answer = "" #params["pre_answer"]
 
         answer_question_response = get_chatgpt_answer(
             summary_level, book_name, question, previous_question, previous_answer, app.pinecone_index)
