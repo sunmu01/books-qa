@@ -58,9 +58,9 @@ const askHandler = async () => {
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-      answer.value = data;
+      answer.value = data.answer;
       payload.value.previous_question = payload.value.question;
-      payload.value.previous_answer = data;
+      payload.value.previous_answer = answer.value;
     })
     .catch((error) => {
       error.value = error;
