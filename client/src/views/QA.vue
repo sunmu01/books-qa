@@ -88,7 +88,7 @@ const askHandler = async () => {
             title="bookname"
             v-model="payload.bookname"
           >
-            <option value="null" selected>All books</option>
+            <option value="" selected>All books</option>
             <option :value="book.book_name" v-for="book in books">
               《{{ book.book_name }}》
             </option>
