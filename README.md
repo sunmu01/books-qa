@@ -26,7 +26,7 @@ bash script/start "<your OPENAI_API_KEY>"
 
 ### Client
 
-Please see Readme in client directory
+Please see README.md in client directory
 
 ## Limitations
 

@@ -80,6 +80,7 @@ def answer_question():
         question = params["question"]
         summary_level = params["qa_level"]
         book_name = params["bookname"]
+        
         previous_question = "" #params["pre_question"]
         previous_answer = "" #params["pre_answer"]
 
