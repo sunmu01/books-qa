@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onBeforeMount, computed } from "vue";
 
-const booksUrl = ref(import.meta.env.VITE_API_URL);
+const booksUrl = ref(import.meta.env.VITE_BOOK_URL);
 
 const error = ref(null);
 const answer = ref(null);
@@ -199,6 +199,34 @@ const askHandler = async () => {
         </div>
       </div>
 
+      <div v-if="payload.bookname">
+        <p>Book Content or Summary:</p>
+        <div class="p-8 w-full bg-slate-50 border-slate-50">
+          <a
+            class="cursor-pointer hover:text-blue-600 hover:bg-slate-100 px-1 flex items-center justify-between"
+            :href="`${booksUrl}/${payload.bookname}-${payload.qa_level}.txt`"
+            target="_blank"
+          >
+            <div>{{ payload.bookname }}-{{ payload.qa_level }}.txt</div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+      </div>
+
       <div class="border-t-1 border-gray-50">
         <article class="prose max-w-none" v-if="asking">
           <div class="p-8 w-full bg-slate-50 border-slate-50 flex items-center">
@@ -239,33 +267,6 @@ const askHandler = async () => {
               class="p-8 w-full bg-slate-50 border-slate-50"
               v-html="reference"
             ></div>
-          </div>
-          <div v-if="payload.bookname">
-            <p>Original Book:</p>
-            <div class="p-8 w-full bg-slate-50 border-slate-50">
-              <a
-                class="cursor-pointer hover:text-blue-600 hover:bg-slate-100 px-1 flex items-center justify-between"
-                :href="`${booksUrl}/${payload.bookname}-${payload.qa_level}.txt`"
-                target="_blank"
-              >
-                <div>{{ payload.bookname }}-{{ payload.qa_level }}.txt</div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-              </a>
-            </div>
           </div>
         </article>
       </div>
