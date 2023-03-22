@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onBeforeMount, computed } from "vue";
 
+const booksUrl = ref(import.meta.env.VITE_API_URL);
+
 const error = ref(null);
 const answer = ref(null);
 const reference = ref(null);
@@ -26,6 +28,7 @@ const api = import.meta.env.VITE_API_URL;
 onBeforeMount(() => {
   fetch(`${api}/get_bookname_list`, {
     method: "GET",
+    mode: "cors",
     headers: {
       "Content-Type": "application/json",
     },
@@ -60,6 +63,7 @@ const askHandler = async () => {
   asking.value = true;
   fetch(`${api}/get_chatgpt_answer`, {
     method: "POST",
+    mode: "cors",
     headers: {
       "Content-Type": "application/json",
     },
@@ -238,7 +242,8 @@ const askHandler = async () => {
           <div class="p-8 w-full bg-slate-50 border-slate-50">
             <a
               class="cursor-pointer hover:text-blue-600 hover:bg-slate-100 px-1 flex items-center justify-between"
-              :href="`${VITE_API_URL}/books/${payload.bookname}-${payload.qa_level}.txt`"
+              :href="`${booksUrl}/${payload.bookname}-${payload.qa_level}.txt`"
+              target="_blank"
             >
               <div>{{ payload.bookname }}-{{ payload.qa_level }}.txt</div>
               <svg
