@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, computed } from "vue";
 
 const error = ref(null);
 const answer = ref(null);
@@ -48,7 +48,16 @@ const payload = ref({
   previous_answer: "",
 });
 
+const invalid = computed(() => {
+  return !payload.value.question;
+});
+
+const asking = ref(false);
+
 const askHandler = async () => {
+  error.value = null;
+  answer.value = null;
+  asking.value = true;
   fetch(`${api}/get_chatgpt_answer`, {
     method: "POST",
     headers: {
@@ -66,6 +75,9 @@ const askHandler = async () => {
     })
     .catch((error) => {
       error.value = error;
+    })
+    .finally(() => {
+      asking.value = false;
     });
 };
 </script>
@@ -73,11 +85,13 @@ const askHandler = async () => {
 <template>
   <div>
     <div class="prose max-w-none">
-      <div class="text-2xl border-l-4 pl-4 border-blue-600">Books Q&A with ChatGPT</div>
+      <div class="text-2xl border-l-4 pl-4 border-blue-600">
+        Books Q&A with ChatGPT
+      </div>
 
       <p>
-        We use OpenAI embeddings and ChatGPT to find answers from the
-        relevant books.
+        We use OpenAI embeddings and ChatGPT to find answers from the relevant
+        books.
       </p>
 
       <div>
@@ -88,6 +102,7 @@ const askHandler = async () => {
             name="bookname"
             title="bookname"
             v-model="payload.bookname"
+            :disabled="asking"
           >
             <option value="" selected>All books</option>
             <option :value="book.book_name" v-for="book in books">
@@ -107,6 +122,7 @@ const askHandler = async () => {
               name="qa_level"
               :value="level.value"
               v-model="payload.qa_level"
+              :disabled="asking"
             />
             {{ level.name }}
           </label>
@@ -122,6 +138,7 @@ const askHandler = async () => {
             name="question"
             v-model="payload.question"
             placeholder="e.g. What is the Central Bank? or 什么是中国历史的空间结构？"
+            :disabled="asking"
           />
         </div>
       </div>
@@ -129,8 +146,45 @@ const askHandler = async () => {
       <div class="py-2">
         <button
           type="button"
-          class="px-6 py-2 rounded text-white bg-blue-600 hover:bg-blue-700"
+          class="px-6 py-2 rounded text-white bg-blue-400 cursor-progress flex items-center"
+          disabled
+          v-if="asking"
+        >
+          <svg
+            class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          Loading..
+        </button>
+        <button
+          type="button"
+          class="px-6 py-2 rounded text-white bg-blue-400 cursor-not-allowed"
+          disabled
+          v-else-if="invalid"
+        >
+          Ask question
+        </button>
+        <button
+          type="button"
+          class="px-6 py-2 rounded text-white bg-blue-600 hover:bg-blue-800"
           @click="askHandler"
+          v-else
         >
           Ask question
         </button>
@@ -138,8 +192,33 @@ const askHandler = async () => {
       </div>
     </div>
 
-    <div class="pt-4" v-if="answer">
-      <article class="prose max-w-none">
+    <div class="pt-4">
+      <article class="prose max-w-none" v-if="asking">
+        <div class="p-8 w-full bg-slate-50 border-slate-50 flex items-center">
+          <svg
+            class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          GPT is loading...
+        </div>
+      </article>
+      <article class="prose max-w-none" v-else-if="answer">
         <p>Answer:</p>
         <div
           class="p-8 w-full bg-slate-50 border-slate-50"
