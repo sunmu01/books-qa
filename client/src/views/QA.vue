@@ -68,8 +68,8 @@ const askHandler = async () => {
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-      answer.value = data.answer.replace(/\n/g, '<br>');
-      reference.value = data.reference.replace(/\n/g, '<br>');
+      answer.value = data.answer.replace(/\n/g, "<br>");
+      reference.value = data.reference.replace(/\n/g, "<br>");
       payload.value.previous_question = payload.value.question;
       payload.value.previous_answer = answer.value;
     })
@@ -182,7 +182,7 @@ const askHandler = async () => {
         </button>
         <button
           type="button"
-          class="px-6 py-2 rounded text-white bg-blue-600 hover:bg-blue-800"
+          class="px-6 py-2 rounded text-white bg-blue-600 hover:bg-blue-700"
           @click="askHandler"
           v-else
         >
@@ -192,7 +192,7 @@ const askHandler = async () => {
       </div>
     </div>
 
-    <div class="pt-4">
+    <div class="border-t-1 border-gray-50">
       <article class="prose max-w-none" v-if="asking">
         <div class="p-8 w-full bg-slate-50 border-slate-50 flex items-center">
           <svg
@@ -218,25 +218,48 @@ const askHandler = async () => {
           GPT is loading...
         </div>
       </article>
-      <article class="prose max-w-none" v-else-if="answer">
-        <p>Answer:</p>
-        <div
-          class="p-8 w-full bg-slate-50 border-slate-50"
-          v-html="answer"
-        ></div>
+      <article class="prose max-w-none" v-else>
+        <div v-if="answer">
+          <p>Answer:</p>
+          <div
+            class="p-8 w-full bg-slate-50 border-slate-50"
+            v-html="answer"
+          ></div>
+        </div>
+        <div v-if="reference">
+          <p>Reference:</p>
+          <div
+            class="p-8 w-full bg-slate-50 border-slate-50"
+            v-html="reference"
+          ></div>
+        </div>
+        <div v-if="payload.bookname">
+          <p>Original Book:</p>
+          <div class="p-8 w-full bg-slate-50 border-slate-50">
+            <a
+              class="cursor-pointer hover:text-blue-600 hover:bg-slate-100 px-1 flex items-center justify-between"
+            >
+              <div>{{ payload.bookname }}-{{ payload.qa_level }}.txt</div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </a>
+          </div>
+        </div>
       </article>
     </div>
-
-    <div class="pt-4" v-if="reference">
-      <article class="prose max-w-none">
-        <p>Reference:</p>
-        <div
-          class="p-8 w-full bg-slate-50 border-slate-50"
-          v-html="reference"
-        ></div>
-      </article>
-    </div>
-
   </div>
 </template>
 
