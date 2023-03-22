@@ -3,6 +3,7 @@ import { ref, onBeforeMount } from "vue";
 
 const error = ref(null);
 const answer = ref(null);
+const reference = ref(null);
 
 const levels = ref([
   {
@@ -58,7 +59,8 @@ const askHandler = async () => {
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-      answer.value = data.answer;
+      answer.value = data.answer.replace(/\n/g, '<br>');
+      reference.value = data.reference.replace(/\n/g, '<br>');
       payload.value.previous_question = payload.value.question;
       payload.value.previous_answer = answer.value;
     })
@@ -145,6 +147,17 @@ const askHandler = async () => {
         ></div>
       </article>
     </div>
+
+    <div class="pt-4" v-if="reference">
+      <article class="prose max-w-none">
+        <p>Reference:</p>
+        <div
+          class="p-8 w-full bg-slate-50 border-slate-50"
+          v-html="reference"
+        ></div>
+      </article>
+    </div>
+
   </div>
 </template>
 

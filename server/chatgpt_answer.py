@@ -131,7 +131,7 @@ def get_chatgpt_answer(summary_level, book_name, question, previous_question, pr
         answer = response['choices'][0]['message']['content'].strip()
         logger.info(f"[get_chatgpt_answer] answer: {answer}")
 
-        return jsonify({"answer": answer})
+        return jsonify({"answer": answer, "reference": files_string})
 
     except Exception as e:
         logger.info(f"[get_chatgpt_answer] error: {e}")
