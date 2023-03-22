@@ -6,7 +6,7 @@ import App from "./App.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory({ base: import.meta.env.BASE_URL }),
   routes: [
     { path: "/", component: () => import("./views/QA.vue") },
     { path: "/up", component: () => import("./views/UP.vue") },

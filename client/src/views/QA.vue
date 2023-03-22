@@ -238,6 +238,7 @@ const askHandler = async () => {
           <div class="p-8 w-full bg-slate-50 border-slate-50">
             <a
               class="cursor-pointer hover:text-blue-600 hover:bg-slate-100 px-1 flex items-center justify-between"
+              :href="`${VITE_API_URL}/books/${payload.bookname}-${payload.qa_level}.txt`"
             >
               <div>{{ payload.bookname }}-{{ payload.qa_level }}.txt</div>
               <svg
