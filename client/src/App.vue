@@ -169,7 +169,7 @@ const handleDownload = () => {
         <div class="py-2">
           <button
             type="button"
-            class="px-6 py-2 rounded text-white bg-blue-400 cursor-progress flex items-center"
+            class="px-6 py-2 rounded text-white bg-blue-400 cursor-wait flex items-center"
             disabled
             v-if="asking"
           >
@@ -216,38 +216,13 @@ const handleDownload = () => {
       </div>
 
       <div class="border-t-1 border-gray-50">
-        <article class="prose max-w-none" v-if="asking">
-          <div class="p-8 w-full bg-slate-50 border-slate-50 flex items-center">
-            <svg
-              class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            GPT is loading...
-          </div>
-        </article>
-        <article class="prose max-w-none" v-else>
-          <div v-if="payload.bookname">
+        <article class="prose max-w-noe" v-if="payload.bookname">
+          <div>
             <p>Book Content or Summary:</p>
             <div class="p-8 w-full bg-slate-50 border-slate-50">
               <button
                 type="button"
-                class="cursor-progress text-slate-500 bg-slate-200 w-full px-2 flex items-center justify-between"
+                class="cursor-wait text-slate-500 bg-slate-200 w-full px-2 flex items-center justify-between"
                 disabled
                 v-if="downloading"
               >
@@ -300,6 +275,35 @@ const handleDownload = () => {
               </button>
             </div>
           </div>
+        </article>
+
+        <article class="prose max-w-none" v-if="asking">
+          <div class="p-8 w-full bg-slate-50 border-slate-50 flex items-center">
+            <svg
+              class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            GPT is loading...
+          </div>
+        </article>
+
+        <article class="prose max-w-none" v-else>
           <div v-if="answer">
             <p>Answer:</p>
             <div
@@ -307,6 +311,7 @@ const handleDownload = () => {
               v-html="answer"
             ></div>
           </div>
+          
           <div v-if="reference">
             <p>Reference:</p>
             <div
