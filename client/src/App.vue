@@ -252,9 +252,11 @@ const handleDownload = () => {
               >
                 {{ payload.bookname }}-{{ payload.qa_level }}.txt
                 <svg
-                  class="animate-spin -ml-1 mr-3 h-5 w-5 text-slate-500"
+                  class="animate-spin text-slate-500"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
+                  width="20"
+                  height="20"
                   viewBox="0 0 24 24"
                 >
                   <circle
@@ -281,8 +283,8 @@ const handleDownload = () => {
                 {{ payload.bookname }}-{{ payload.qa_level }}.txt
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
+                  width="20"
+                  height="20"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
