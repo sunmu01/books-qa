@@ -62,6 +62,7 @@ const asking = ref(false);
 const askHandler = () => {
   error.value = null;
   answer.value = null;
+  reference.value = null;
   asking.value = true;
   fetch(`${api}/get_chatgpt_answer`, {
     method: "POST",
@@ -279,7 +280,7 @@ const handleDownload = () => {
           <div v-if="asking">
             <p class="w-full flex items-center">
               <svg
-                class="animate-spin text-blue-600"
+                class="animate-spin mr-4 text-blue-600"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 width="20"
