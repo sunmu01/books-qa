@@ -93,11 +93,11 @@ const askHandler = async () => {
     <div class="p-4 md:p-8 bg-white shadow">
       <div class="prose max-w-none">
         <div class="text-2xl border-l-4 pl-4 border-blue-600">
-          Books Q&A with ChatGPT
+          ChatBook v0.0.1  - lauched on 2023-03-22
         </div>
 
         <p>
-          We use OpenAI embeddings and ChatGPT to find answers from the relevant
+          We use Pinecone, OpenAI embeddings and ChatGPT to find answers from the relevant
           books.
         </p>
 
