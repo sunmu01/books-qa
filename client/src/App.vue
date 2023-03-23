@@ -120,7 +120,7 @@ const askHandler = async () => {
         </div>
 
         <div>
-          <i>Choose search level (default is "book"):</i>
+          <i>Choose content level (default is "book"):</i>
           <div class="py-2 flex">
             <label class="flex items-center mr-4" v-for="level in levels">
               <input
@@ -137,7 +137,7 @@ const askHandler = async () => {
         </div>
 
         <div>
-          <i>Ask a question based on the content of these books:</i>
+          <i>Ask a question based on the content of books:</i>
           <div class="py-2">
             <input
               class="form-input rounded w-full"
