@@ -248,6 +248,7 @@ const handleDownload = () => {
               <button
                 type="button"
                 class="cursor-progress text-slate-500 bg-slate-200 w-full px-2 flex items-center justify-between"
+                disabled
                 v-if="downloading"
               >
                 {{ payload.bookname }}-{{ payload.qa_level }}.txt
