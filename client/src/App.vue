@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onBeforeMount, computed } from "vue";
+import download from "downloadjs";
 
 const booksUrl = ref(import.meta.env.VITE_BOOK_URL);
 const appUrl = ref(import.meta.env.VITE_APP_URL);
@@ -37,7 +38,6 @@ onBeforeMount(() => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       books.value = data;
     })
     .catch((error) => {
@@ -74,7 +74,6 @@ const askHandler = () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       answer.value = data.answer.replace(/\n/g, "<br>");
       reference.value = data.reference.replace(/\n/g, "<br>");
       payload.value.previous_question = payload.value.question;
@@ -88,22 +87,17 @@ const askHandler = () => {
     });
 };
 
+const downloading = ref(false);
 const handleDownload = () => {
-  fetch(
-    `${booksUrl.value}/${payload.value.bookname}-${payload.value.qa_level}.txt`,
-    {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": `${appUrl.value}`,
-      },
-    }
-  )
+  downloading.value = true;
+  const filename = `${payload.value.bookname}-${payload.value.qa_level}.txt`;
+  fetch(`${booksUrl.value}/${filename}`)
     .then((response) => response.blob())
     .then((blob) => {
-      var file = window.URL.createObjectURL(blob);
-      window.location.assign(file);
+      download(blob, filename, "text/pain");
+    })
+    .finally(() => {
+      downloading.value = false;
     });
 };
 </script>
@@ -127,7 +121,7 @@ const handleDownload = () => {
           <i>Choose book for Q&A (optional):</i>
           <div class="py-2">
             <select
-              class="form-select rounded pl-4 pr-8 py-1.5"
+              class="form-select rounded pl-4 pr-8 py-1.5 max-w-full"
               name="bookname"
               title="bookname"
               v-model="payload.bookname"
@@ -221,34 +215,6 @@ const handleDownload = () => {
         </div>
       </div>
 
-      <div v-if="payload.bookname">
-        <p>Book Content or Summary:</p>
-        <div class="p-8 w-full bg-slate-50 border-slate-50">
-          <a
-            class="cursor-pointer hover:text-blue-600 hover:bg-slate-100 px-1 flex items-center justify-between"
-            :href="`${booksUrl}/${payload.bookname}-${payload.qa_level}.txt`"
-            target="_blank"
-          >
-            <div>{{ payload.bookname }}-{{ payload.qa_level }}.txt</div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-          </a>
-        </div>
-      </div>
-
       <div class="border-t-1 border-gray-50">
         <article class="prose max-w-none" v-if="asking">
           <div class="p-8 w-full bg-slate-50 border-slate-50 flex items-center">
@@ -276,29 +242,43 @@ const handleDownload = () => {
           </div>
         </article>
         <article class="prose max-w-none" v-else>
-          <div v-if="answer">
-            <p>Answer:</p>
-            <div
-              class="p-8 w-full bg-slate-50 border-slate-50"
-              v-html="answer"
-            ></div>
-          </div>
-          <div v-if="reference">
-            <p>Reference:</p>
-            <div
-              class="p-8 w-full bg-slate-50 border-slate-50"
-              v-html="reference"
-            ></div>
-          </div>
           <div v-if="payload.bookname">
-            <p>Original Book:</p>
+            <p>Book Content or Summary:</p>
             <div class="p-8 w-full bg-slate-50 border-slate-50">
-              <a
-                class="cursor-pointer hover:text-blue-600 hover:bg-slate-100 px-1 flex items-center justify-between"
-                :href="`${booksUrl}/${payload.bookname}-${payload.qa_level}.txt`"
-                target="_blank"
+              <button
+                type="button"
+                class="cursor-progress text-slate-500 bg-slate-200 w-full px-2 flex items-center justify-between"
+                v-if="downloading"
               >
-                <div>{{ payload.bookname }}-{{ payload.qa_level }}.txt</div>
+                {{ payload.bookname }}-{{ payload.qa_level }}.txt
+                <svg
+                  class="animate-spin -ml-1 mr-3 h-5 w-5 text-slate-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              </button>
+              <button
+                type="button"
+                class="cursor-pointer text-slate-900 hover:text-blue-600 hover:bg-slate-200 border-b-1 hover:border-blue-500 w-full px-2 flex items-center justify-between"
+                @click="handleDownload"
+                v-else
+              >
+                {{ payload.bookname }}-{{ payload.qa_level }}.txt
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"
@@ -314,8 +294,22 @@ const handleDownload = () => {
                   <polyline points="7 10 12 15 17 10"></polyline>
                   <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
-              </a>
+              </button>
             </div>
+          </div>
+          <div v-if="answer">
+            <p>Answer:</p>
+            <div
+              class="p-8 w-full bg-slate-50 border-slate-50"
+              v-html="answer"
+            ></div>
+          </div>
+          <div v-if="reference">
+            <p>Reference:</p>
+            <div
+              class="p-8 w-full bg-slate-50 border-slate-50"
+              v-html="reference"
+            ></div>
           </div>
         </article>
       </div>
