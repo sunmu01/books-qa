@@ -2,6 +2,7 @@
 import { ref, onBeforeMount, computed } from "vue";
 
 const booksUrl = ref(import.meta.env.VITE_BOOK_URL);
+const appUrl = ref(import.meta.env.VITE_APP_URL);
 
 const error = ref(null);
 const answer = ref(null);
@@ -31,6 +32,7 @@ onBeforeMount(() => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": `${appUrl.value}`,
     },
   })
     .then((response) => response.json())
@@ -57,7 +59,7 @@ const invalid = computed(() => {
 
 const asking = ref(false);
 
-const askHandler = async () => {
+const askHandler = () => {
   error.value = null;
   answer.value = null;
   asking.value = true;
@@ -66,6 +68,7 @@ const askHandler = async () => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": `${appUrl.value}`,
     },
     body: JSON.stringify(payload.value),
   })
@@ -84,6 +87,25 @@ const askHandler = async () => {
       asking.value = false;
     });
 };
+
+const handleDownload = () => {
+  fetch(
+    `${booksUrl.value}/${payload.value.bookname}-${payload.value.qa_level}.txt`,
+    {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": `${appUrl.value}`,
+      },
+    }
+  )
+    .then((response) => response.blob())
+    .then((blob) => {
+      var file = window.URL.createObjectURL(blob);
+      window.location.assign(file);
+    });
+};
 </script>
 
 <template>
@@ -93,12 +115,12 @@ const askHandler = async () => {
     <div class="p-4 md:p-8 bg-white shadow">
       <div class="prose max-w-none">
         <div class="text-2xl border-l-4 pl-4 border-blue-600">
-          ChatBook v0.0.1  - lauched on 2023-03-22
+          ChatBook v0.0.1 - lauched on 2023-03-22
         </div>
 
         <p>
-          We use Pinecone, OpenAI embeddings and ChatGPT to find answers from the relevant
-          books.
+          We use Pinecone, OpenAI embeddings and ChatGPT to find answers from
+          the relevant books.
         </p>
 
         <div>
@@ -267,6 +289,33 @@ const askHandler = async () => {
               class="p-8 w-full bg-slate-50 border-slate-50"
               v-html="reference"
             ></div>
+          </div>
+          <div v-if="payload.bookname">
+            <p>Original Book:</p>
+            <div class="p-8 w-full bg-slate-50 border-slate-50">
+              <a
+                class="cursor-pointer hover:text-blue-600 hover:bg-slate-100 px-1 flex items-center justify-between"
+                :href="`${booksUrl}/${payload.bookname}-${payload.qa_level}.txt`"
+                target="_blank"
+              >
+                <div>{{ payload.bookname }}-{{ payload.qa_level }}.txt</div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+              </a>
+            </div>
           </div>
         </article>
       </div>
