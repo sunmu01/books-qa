@@ -107,7 +107,7 @@ const handleDownload = () => {
     class="sm:p-4 md:p-8 flex flex-col items-center fixed inset-0 overflow-auto bg-slate-200"
   >
     <div class="p-4 md:p-8 bg-white shadow">
-      <div class="prose max-w-none">
+      <div class="prose w-full">
         <div class="text-2xl border-l-4 pl-4 border-blue-600">
           ChatBook v0.0.1 - lauched on 2023-03-22
         </div>
@@ -121,7 +121,7 @@ const handleDownload = () => {
           <i>Choose book for Q&A (optional):</i>
           <div class="py-2">
             <select
-              class="form-select rounded pl-4 pr-8 py-1.5 max-w-full"
+              class="form-select rounded pl-4 pr-8 py-1.5 w-full"
               name="bookname"
               title="bookname"
               v-model="payload.bookname"
@@ -216,8 +216,8 @@ const handleDownload = () => {
       </div>
 
       <div class="border-t-1 border-gray-50">
-        <article class="prose max-w-noe" v-if="payload.bookname">
-          <div>
+        <article class="prose max-w-noe">
+          <div v-if="payload.bookname">
             <p>Book Content or Summary:</p>
             <div class="p-8 w-full bg-slate-50 border-slate-50">
               <button
@@ -275,43 +275,43 @@ const handleDownload = () => {
               </button>
             </div>
           </div>
-        </article>
 
-        <article class="prose max-w-none" v-if="asking">
-          <div class="p-8 w-full bg-slate-50 border-slate-50 flex items-center">
-            <svg
-              class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            GPT is loading...
+          <div v-if="asking">
+            <p class="w-full flex items-center">
+              <svg
+                class="animate-spin text-blue-600"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              GPT is loading...
+            </p>
           </div>
-        </article>
 
-        <article class="prose max-w-none" v-else>
           <div v-if="answer">
-            <p>Answer:</p>
+            <p>Answer</p>
             <div
               class="p-8 w-full bg-slate-50 border-slate-50"
               v-html="answer"
             ></div>
           </div>
-          
+
           <div v-if="reference">
             <p>Reference:</p>
             <div
